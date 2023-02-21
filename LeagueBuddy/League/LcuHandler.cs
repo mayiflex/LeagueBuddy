@@ -39,7 +39,7 @@ namespace LeagueBuddy.League
                 leagueLcu = null;
                 AttachToLeagueClientOnStartup();
             }
-            updatePlayerStatusTask = RunPlayerStateTask();
+            updatePlayerStatusTask = runPlayerStateTask();
         }
         public static void RemoveInitStatus()
         {
@@ -115,11 +115,21 @@ namespace LeagueBuddy.League
             var self = await GetSelfSummonerAsync();
             if (!Settings.current.ContainsBlacklistedSummoner(self.name)) return false;
             cts.Cancel();
-            MainController.enqueueMessage("You are on a blacklisted account. Multisearch, autoaccept, dodge and report is disabled.");
+            MainController.enqueueMessage("You are on a blacklisted account. The commands multisearch, autoaccept, dodge and report aren't available.");
             return true;
         }
 
-        private static Task RunPlayerStateTask()
+        private async static void replacePlayerStateTaskWithKeepAlive() {
+            await Task.Delay(5000);
+            cts = new CancellationTokenSource();
+            updatePlayerStatusTask = Task.Run(() => {
+                while (!cts.IsCancellationRequested) {
+                    Thread.Sleep(3600000);
+                }
+            });
+        }
+
+        private static Task runPlayerStateTask()
         {
             return Task.Run(async () =>
             {
@@ -131,6 +141,7 @@ namespace LeagueBuddy.League
                         continue;
                     }
                     if (!IsCurrentSummonerBlacklistedAsync().Result) break;
+                    //replacePlayerStateTaskWithKeepAlive();
                     return;
                 }
 

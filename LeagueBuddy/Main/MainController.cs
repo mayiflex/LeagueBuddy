@@ -20,7 +20,7 @@ using LeagueBuddy.Main.DataCsses;
 
 namespace LeagueBuddy
 {
-    internal class MainController {
+    internal class MainController : ApplicationContext {
         private string Status { get; set; } = null!;
         private string StatusFile { get; } = Path.Combine(Settings.DataDir, "status");
         private bool ConnectToMuc { get; set; } = true;
@@ -43,6 +43,7 @@ namespace LeagueBuddy
             messageQueue.Enqueued += (sender, e) => {
                 var message = messageQueue.Dequeue();
                 if (message != null) {
+                    Thread.Sleep(5000);
                     SendMessageFromFakePlayerAsync(message).GetAwaiter().GetResult();
                 }
             };
@@ -105,22 +106,10 @@ namespace LeagueBuddy
                         switch (args[0]) {
                             case "help":
                                 if (args.Length == 1) {
-                                    await SendMessageFromFakePlayerAsync("help [(command)]");
+                                    await SendMessageFromFakePlayerAsync("help (command) - for more information");
                                     Thread.Sleep(200);
+                                    await SendMessageFromFakePlayerAsync("login, appear, blacklist, autoaccept, multisearch, report, dodge");
                                     //await SendMessageFromFakePlayerAsync("profile <?/save/on/off>"); //todo
-                                    await SendMessageFromFakePlayerAsync("login <?/(alias)/add/remove/update/auto>");
-                                    Thread.Sleep(200);
-                                    await SendMessageFromFakePlayerAsync("multisearch [<?/on/off/prefix/suffix>]");
-                                    Thread.Sleep(200);
-                                    await SendMessageFromFakePlayerAsync("appear <?/offline/online/mobile>");
-                                    Thread.Sleep(200);
-                                    await SendMessageFromFakePlayerAsync("report [<?/on/off/message>]");
-                                    Thread.Sleep(200);
-                                    await SendMessageFromFakePlayerAsync("blacklist <?/add/remove> (summonerName)");
-                                    Thread.Sleep(200);
-                                    await SendMessageFromFakePlayerAsync("autoaccept <?/on/off>");
-                                    Thread.Sleep(200);
-                                    await SendMessageFromFakePlayerAsync("dodge");
                                     break;
                                 }
                                 switch(args[1]) {
@@ -133,7 +122,7 @@ namespace LeagueBuddy
                                         Thread.Sleep(200);
                                         await SendMessageFromFakePlayerAsync("login <add/remove> (alias) (username) (password) - Adds/removes login for use");
                                         Thread.Sleep(200);
-                                        await SendMessageFromFakePlayerAsync("login auto (alias) - Specified account gets logged in automatically on first start");
+                                        await SendMessageFromFakePlayerAsync("login auto (alias) - Specified account gets logged in on first start");
                                         break;
                                     case "multisearch":
                                         await SendMessageFromFakePlayerAsync("\"multisearch\" creates a multisearch link for your current champion select. (Can be used to reveal solo/duo lobbies)");
@@ -159,8 +148,8 @@ namespace LeagueBuddy
                                         await SendMessageFromFakePlayerAsync("\"report\" reports all player from the aftergame lobby that isn't a friend of yours.");
                                         Thread.Sleep(200);
                                         await SendMessageFromFakePlayerAsync("report ? - Shows you the current report message");
-                                        Thread.Sleep(200);
-                                        await SendMessageFromFakePlayerAsync("report <on/off> - Turns auto reporting after game on/off");
+                                        //Thread.Sleep(200);
+                                        //await SendMessageFromFakePlayerAsync("report <on/off> - Turns auto reporting after game on/off");
                                         Thread.Sleep(200);
                                         await SendMessageFromFakePlayerAsync("report message (message) - Sets the report message (bottom text box) of reports");
                                         break;
@@ -430,7 +419,11 @@ namespace LeagueBuddy
             if (!InsertedFakePlayer)
                 return;
             SentIntroductionText = true;
-            await SendMessageFromFakePlayerAsync("Write me \"help\" to see all commands");
+            await SendMessageFromFakePlayerAsync("Write me \"help\" to see all commands. Click the tray icon to exit.");
+            if(Status != "chat") {
+                Thread.Sleep(200);
+                await SendMessageFromFakePlayerAsync("You are appearing as " + Status + ".");
+            }
         }
 
         private async Task SendFakePlayerPresenceAsync() {

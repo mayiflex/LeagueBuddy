@@ -83,17 +83,16 @@ namespace LeagueBuddy
             return lcu;
         }
 
-        public static async void Launch() {
+        internal static async Task<MainController> Launch() {
             if(Settings.current.MainAccountKey != "") {
-                Launch(Settings.current.MainAccountKey);
-                return;
+                return await Launch(Settings.current.MainAccountKey);
             }
             var lcuTask = ConnectLcuOnRiotClientStart();
-            await launch(lcuTask);
+            return await launch(lcuTask);
         }
-        public static async void Launch(string key) {
+        internal static async Task<MainController> Launch(string key) {
             var lcuTask = LoginOnLcuConnect(key);
-            await launch(lcuTask);
+            return await launch(lcuTask);
         }
         private static async Task<MainController> launch(Task<LCU> lcuTask) {
             // Step 0: Kill all current processes
@@ -173,7 +172,8 @@ namespace LeagueBuddy
                 await sslOutgoing.AuthenticateAsClientAsync(chatHost);
                 mainController.StartThreads(sslIncoming, sslOutgoing);
             };
-            return mainController;
+            Application.Run(mainController);
+            return null;
         }
     }
 }
