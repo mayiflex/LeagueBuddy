@@ -5,7 +5,7 @@
 2. Swap accounts fast
 3. Generate multi search links for soloq
 4. Automatically accept ready checks
-5. Mass report all players from the after game lobby that you aren't friends with
+5. Mass report all players from the after game lobby that aren't your friends
 6. Dodge champion select without closing the client
 
 ## Planned features
