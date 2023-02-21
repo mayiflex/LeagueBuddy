@@ -206,7 +206,7 @@ namespace LeagueBuddy
                                             await SendMessageFromFakePlayerAsync("Alias is already in use.");
                                             break;
                                         }
-                                        await SendMessageFromFakePlayerAsync(Launcher.AddLogin(args[2], args[3], args[4]) ? "The Login has been added." : "Failed saving the changes to file.");
+                                        await SendMessageFromFakePlayerAsync(Launcher.AddLogin(args[2], args[3], args[4]) ? "The login has been added." : "Failed saving the changes to file.");
                                         break;
                                     case "remove":
                                         if (args.Length < 3) break;
