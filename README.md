@@ -8,7 +8,7 @@
 5. Mass report all players from the after game lobby that aren't your friends
 6. Dodge champion select without closing the client
 
-Also has a mode where all possibly bannable features are disabled. (Spoofing your online status and accounts swapping is still available)
+Also has a mode where all possibly bannable features are disabled. (Spoofing your online status and account swapping is still available)
 
 ## Planned features
 1. Setting the same profile on every account (Status, background, icon, ...)
