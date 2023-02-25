@@ -14,6 +14,7 @@ Also has a mode where all possibly bannable features are disabled. (Spoofing you
 1. Setting the same profile on every account (Status, background, icon, ...)
 2. Showing created item builds on every account
 3. Dodging champ select last second
-4. Map timers (?)
+4. Intlist (get notifications when you are playing with xy)
+5. Map timers (?)
 
 ## [Download the latest release](https://github.com/mayiflex/LeagueBuddy/releases/tag/v1.0-alpha)
