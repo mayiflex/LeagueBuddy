@@ -19,8 +19,17 @@ namespace LeagueBuddy
         [JsonIgnore]
         public static Settings current;
         [JsonIgnore]
-        private static readonly string settingsPath = Path.Combine(Settings.DataDir, "settings");
+        private static readonly string settingsPath = Path.Combine(Settings.DataDir, "settings.json");
         [JsonProperty]
+        private bool isItemsetRewritingEnabled;
+        [JsonProperty]
+        public bool IsItemsetRewritingEnabled {
+            get => isItemsetRewritingEnabled;
+            set {
+                isItemsetRewritingEnabled = value;
+                SaveSettings();
+            }
+        }
         private bool isAutoAcceptEnabled;
         [JsonIgnore]
         public bool IsAutoAcceptEnabled {
@@ -108,7 +117,8 @@ namespace LeagueBuddy
         private HashSet<KnownInter> intlist;
 
         [JsonConstructor]
-        private Settings(bool isAutoAcceptEnabled, bool isAutoLobbyRevealEnabled, bool isAutoReportEnabled, string chatName, string mainAccountKey, string reportMessage, string multisearchPrefix, string multisearchSuffix, HashSet<string> blacklistedSummoners, HashSet<KnownInter> intlist) {
+        private Settings(bool isItemsetRewritingEnabled, bool isAutoAcceptEnabled, bool isAutoLobbyRevealEnabled, bool isAutoReportEnabled, string chatName, string mainAccountKey, string reportMessage, string multisearchPrefix, string multisearchSuffix, HashSet<string> blacklistedSummoners, HashSet<KnownInter> intlist) {
+            this.isItemsetRewritingEnabled = isItemsetRewritingEnabled;
             this.isAutoAcceptEnabled = isAutoAcceptEnabled;
             this.isAutoLobbyRevealEnabled = isAutoLobbyRevealEnabled;
             this.isAutoReportEnabled = isAutoReportEnabled;
@@ -132,6 +142,7 @@ namespace LeagueBuddy
             this.isAutoAcceptEnabled = false;
             this.isAutoLobbyRevealEnabled = false;
             this.isAutoReportEnabled = false;
+            this.isItemsetRewritingEnabled = false;
             this.chatName = "LeagueBuddy";
             this.mainAccountKey = "";
             this.reportMessage = "toxic, racist";
@@ -148,6 +159,7 @@ namespace LeagueBuddy
                 this.isAutoAcceptEnabled = settings.IsAutoAcceptEnabled;
                 this.isAutoLobbyRevealEnabled = settings.IsAutoLobbyRevealEnabled;
                 this.isAutoReportEnabled = settings.IsAutoReportEnabled;
+                this.isItemsetRewritingEnabled = settings.IsItemsetRewritingEnabled;
                 this.chatName = settings.chatName;
                 this.mainAccountKey = settings.MainAccountKey;
                 this.reportMessage = settings.ReportMessage;

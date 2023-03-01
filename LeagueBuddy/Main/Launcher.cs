@@ -15,7 +15,7 @@ using LeagueBuddy.Main;
 namespace LeagueBuddy
 {
     public class Launcher {
-        private static string loginsPath = Path.Combine(Settings.DataDir, "logins");
+        private static string loginsPath = Path.Combine(Settings.DataDir, "logins.json");
         private static Dictionary<string, UserPass> logins = new Dictionary<string, UserPass>() { { "?", new UserPass("", "") }, { "add", new UserPass("", "") }, { "remove", new UserPass("", "") }, { "update", new UserPass("", "")} };
         
         public static void LoadSettings() {

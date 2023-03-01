@@ -354,6 +354,19 @@ namespace LeagueBuddy
                                 Settings.current.ChatName = Utils.CombineStringArrayAfter(args, 1);
                                 await SendMessageFromFakePlayerAsync("The name will update on the next start.");
                                 break;
+                            case "globalitemsets":
+                                if (args.Length < 2) break;
+                                switch(args[1]) {
+                                    case "on":
+                                        Settings.current.IsItemsetRewritingEnabled = true;
+                                        await SendMessageFromFakePlayerAsync("Your itemsets are now available on every account.");
+                                        break;
+                                    case "off":
+                                        Settings.current.IsItemsetRewritingEnabled = false;
+                                        await SendMessageFromFakePlayerAsync("Your itemsets are now only available on the creator account.");
+                                        break;
+                                }
+                                break;
                         }
                     } else {
                         await Outgoing.WriteAsync(bytes, 0, byteCount);

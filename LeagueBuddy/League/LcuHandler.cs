@@ -16,6 +16,7 @@ namespace LeagueBuddy.League
 {
     internal class LcuHandler
     {
+        public static long CurrentSummonerId { get; private set; }
         private static LCU? riotLcu = null;
         private static LCU? leagueLcu = null;
         private static CancellationTokenSource cts = new CancellationTokenSource();
@@ -113,20 +114,14 @@ namespace LeagueBuddy.League
 
         public static async Task<bool> IsCurrentSummonerBlacklistedAsync() {
             var self = await GetSelfSummonerAsync();
+            if (self == null) return true;
             if (!Settings.current.ContainsBlacklistedSummoner(self.name)) return false;
             cts.Cancel();
             MainController.enqueueMessage("You are on a blacklisted account. The commands multisearch, autoaccept, dodge and report aren't available.");
             return true;
         }
-
-        private async static void replacePlayerStateTaskWithKeepAlive() {
-            await Task.Delay(5000);
-            cts = new CancellationTokenSource();
-            updatePlayerStatusTask = Task.Run(() => {
-                while (!cts.IsCancellationRequested) {
-                    Thread.Sleep(3600000);
-                }
-            });
+        public static async Task<string> PushItemsetToClientAsync(string payload) {
+            return await leagueLcu.Request(LCU.RequestMethod.PUT, $"/lol-item-sets/v1/item-sets/{CurrentSummonerId}/sets", payload);
         }
 
         private static Task runPlayerStateTask()
@@ -140,6 +135,8 @@ namespace LeagueBuddy.League
                         Thread.Sleep(2500);
                         continue;
                     }
+                    CurrentSummonerId = GetSelfSummonerAsync().GetAwaiter().GetResult().summonerId;
+                    ItemsetRoot.UpdateLocalSetsAndPushToClientIfEnabled();
                     if (!IsCurrentSummonerBlacklistedAsync().Result) break;
                     //replacePlayerStateTaskWithKeepAlive();
                     return;
